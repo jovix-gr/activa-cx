@@ -1,6 +1,6 @@
 <template>
   <div>
-    <H1>Welcome</H1>
+    <h1>Welcome</h1>
     <p>Hello {{ foo }}, welcome to your first Inertia app!</p>
   </div>
 </template>

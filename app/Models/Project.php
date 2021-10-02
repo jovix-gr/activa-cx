@@ -25,8 +25,20 @@ class Project extends Model
         return $this->belongsTo(User::class);
     }
     
-    public function scopeFilter(Builder $query, array $filter){
-        //TODO filtrar listado del cliente con vue.js
+    public function scopeFilter(Builder $query, array $filters){
+        if (! request("page")){
+            session()->put("search", $filters['search'] ?? null);
+            session()->put("trashed", $filters['trashed'] ?? null);
+        }
+        $query->when(session("search"), function($query, $search){
+            $query->where('name', 'Like', '%'.$search.'%');
+        })->when(session('trashed'), function($query, $trashed){
+            if ($trashed === 'with'){
+                $query->withTrashed();
+            } elseif ($trashed === 'only'){
+                $query->onlyTrashed();
+            }
+        });
     }
 
 }

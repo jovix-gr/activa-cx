@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -13,7 +15,18 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+        if (! session()->has("search") ){
+            session()->put("search", null);
+            session()->put("trashed", null);
+        }
+
+        return Inertia::render("Projects/Index", [
+            "filters" => session()->only(["search", "trashed"]),
+            "projects" => Project::with("user")
+                ->OrderByDesc("id")
+                ->filter(request()->only(["search", "trashed"]))
+                ->paginate(5),
+        ]);
     }
 
     /**
