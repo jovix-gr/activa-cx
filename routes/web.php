@@ -1,7 +1,9 @@
 <?php
 
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +34,17 @@ Route::get('/contact', function () {
         'foo' => 'Desde Contact'
     ]);
 });
+
+Route::group(["middleware" => ['auth:sanctum', 'verified']], function(){
+    Route::get('/dashboard', function(){
+        return Inertia::render('Dashboard', [
+            'foo' => 'Dashboard'
+        ]);
+    })->name('dashboard');
+
+    Route::resource('projects', ProjectController::class)->except(["show"]);
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
