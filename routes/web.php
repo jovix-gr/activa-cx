@@ -32,3 +32,6 @@ Route::get('/contact', function () {
         'foo' => 'Desde Contact'
     ]);
 });
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
